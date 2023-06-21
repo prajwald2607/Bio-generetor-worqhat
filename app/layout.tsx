@@ -1,20 +1,23 @@
-import './globals.css'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Bio Generator App',
-  description: 'Powered by Worqhat',
+interface LayoutProps {
+  children: React.ReactNode;
+  metadata: {
+    title: string;
+    description: string;
+  };
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Layout({ children, metadata }: LayoutProps) {
+
   return (
     <html lang="en">
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   )
