@@ -1,21 +1,28 @@
 import './globals.css'
+import { useEffect } from 'react'
 import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'Bio Generator App',
-  description: 'Powered by Worqhat',
-}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  useEffect(() => {
+    const loadInter = async () => {
+      const inter = await Inter({ subsets: ['latin'] })
+      document.body.classList.add(inter.className)
+    }
+
+    loadInter()
+
+    return () => {
+      document.body.classList.remove('inter')
+    }
+  }, [])
+
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>{children}</body>
     </html>
   )
 }
