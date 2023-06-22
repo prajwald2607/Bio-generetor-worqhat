@@ -1,12 +1,15 @@
+"use client"
+import { IconSquareRoundedNumber1Filled, IconSquareRoundedNumber2Filled, IconSquareRoundedNumber3Filled } from "@tabler/icons-react";
 import React, { useEffect, useState } from 'react';
 import Layout from './layout';
-import { IconSquareRoundedNumber1Filled, IconSquareRoundedNumber2Filled, IconSquareRoundedNumber3Filled } from "@tabler/icons";
-import { metadata } from './layout';
 
-async function fetchBioData(textAreaValue, vibeValue, platformValue) {
-  const API_ENDPOINT = 'https://api.example.com/api/bio/generate'; // Replace with your API endpoint
-  const API_KEY = 'U2FsdGVkX187FPQxzgbmIVjXh3O1+xyor30KWVrIBMuFEqGv8NfzXPjE53e3Ju+T'; // Replace with your API key
-  const ORG_KEY = 'U2FsdGVkX19lq3bhhF5TRouMiyL2HvEBD2V5j5nNl6dNL9JWPbsXW0rqlzssW8GieFki6oRVDKTb/z01Hc7m+Q=='; // Replace with your organization key
+async function fetchBioData(question: string,
+  preserveHistory: boolean,
+  historyObject: any,
+  randomness: boolean) {
+  const API_ENDPOINT = 'https://api.worqhat.com/api/ai/content/v2';
+  const API_KEY = 'U2FsdGVkX187FPQxzgbmIVjXh3O1+xyor30KWVrIBMuFEqGv8NfzXPjE53e3Ju+T';
+  const ORG_KEY = 'U2FsdGVkX19lq3bhhF5TRouMiyL2HvEBD2V5j5nNl6dNL9JWPbsXW0rqlzssW8GieFki6oRVDKTb/z01Hc7m+Q==';
 
   const requestOptions = {
     method: 'POST',
@@ -16,9 +19,10 @@ async function fetchBioData(textAreaValue, vibeValue, platformValue) {
       'x-org-key': ORG_KEY,
     },
     body: JSON.stringify({
-      textAreaValue,
-      vibeValue,
-      platformValue,
+      question,
+      preserve_history: preserveHistory,
+      history_object: historyObject,
+      randomness,
     }),
   };
 
@@ -34,12 +38,21 @@ const MyPage = () => {
   const [generatedBio, setGeneratedBio] = useState('');
 
   const handleGenerateBioClick = async () => {
-    const responseData = await fetchBioData(textAreaValue, vibeValue, platformValue);
-    setGeneratedBio(responseData?.bio || '');
+    let question = '';
+
+    // Create the question based on the input values
+    if (platformValue === 'Linkedin') {
+      question = `Generate a ${vibeValue.toLowerCase()} LinkedIn bio: ${textAreaValue}`;
+    } else if (platformValue === 'Twitter') {
+      question = `Create a ${vibeValue.toLowerCase()} Twitter bio: ${textAreaValue}`;
+    }
+
+    const responseData = await fetchBioData(question, true, {}, 0.1);
+    setGeneratedBio(responseData?.content || '');
   };
 
   return (
-    <Layout metadata={metadata}>
+    <Layout>
       <div className="container">
         <div>
           <h1>Generate your next Twitter bio using Chatgpt</h1>
@@ -92,13 +105,15 @@ const MyPage = () => {
         <button className="generatebtn" onClick={handleGenerateBioClick}>
           Generate your bio
         </button>
-
         {generatedBio && (
-          <div>
-            <h2>Generated Bio:</h2>
-            <p>{generatedBio}</p>
-          </div>
-        )}
+  <div 
+  className="generated-bio-container">
+    <h2 className="generated-bio-heading">Your Generated Bio</h2>
+    <p className="generated-bio">
+      {generatedBio}
+    </p>
+  </div>
+)}
       </div>
     </Layout>
   );
