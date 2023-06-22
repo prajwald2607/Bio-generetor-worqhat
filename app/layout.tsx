@@ -1,5 +1,5 @@
 import './globals.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Inter } from 'next/font/google'
 
 export default function RootLayout({
@@ -7,22 +7,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const [interClassName, setInterClassName] = useState('')
+
   useEffect(() => {
     const loadInter = async () => {
       const inter = await Inter({ subsets: ['latin'] })
-      document.body.classList.add(inter.className)
+      setInterClassName(inter.className)
     }
 
     loadInter()
-
-    return () => {
-      document.body.classList.remove('inter')
-    }
   }, [])
 
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={interClassName}>{children}</body>
     </html>
   )
 }
