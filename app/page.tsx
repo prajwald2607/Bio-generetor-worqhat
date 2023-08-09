@@ -2,7 +2,7 @@
 import { IconSquareRoundedNumber1Filled, IconSquareRoundedNumber2Filled, IconSquareRoundedNumber3Filled } from "@tabler/icons-react";
 import React, { useEffect, useState } from 'react';
 import Layout from './layout';
-const inter = Inter({ subsets: ['latin'] });
+
 
 async function fetchBioData(question: string,
   preserveHistory: boolean,
