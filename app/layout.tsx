@@ -1,4 +1,4 @@
-use client
+"use client"
 import './globals.css'
 import { useEffect } from 'react'
 import { Inter } from 'next/font/google'
